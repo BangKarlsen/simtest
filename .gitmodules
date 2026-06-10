@@ -1,0 +1,6 @@
+[submodule "janet"]
+	path = janet
+	url = https://github.com/janet-lang/janet.git
+[submodule "jaylib"]
+	path = jaylib
+	url = https://github.com/sogaiu/jaylib.git

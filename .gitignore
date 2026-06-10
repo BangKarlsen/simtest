@@ -1,0 +1,8 @@
+build/
+public/
+*.so
+*.dylib
+jpm_tree/
+resources/jaylib.janet
+resources/game.janet
+.DS_Store

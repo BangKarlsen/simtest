@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Traffic Sim</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #1a1a2e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: monospace;
+      color: #eee;
+    }
+    h1 { margin-bottom: 12px; font-size: 1.2em; color: #888; }
+    canvas.emscripten {
+      border: 1px solid #444;
+      cursor: default;
+    }
+    #status {
+      margin-top: 8px;
+      font-size: 0.85em;
+      color: #666;
+    }
+    #spinner {
+      display: inline-block;
+      margin-right: 6px;
+    }
+    .spinner-anim { animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <h1>Traffic Sim</h1>
+  <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+  <div id="status"><span id="spinner" class="spinner-anim">&#9881;</span><span id="status-text">Loading...</span></div>
+
+  <script>
+    var statusText = document.getElementById('status-text');
+    var spinner = document.getElementById('spinner');
+
+    var Module = {
+      print: function(text) { console.log(text); },
+      printErr: function(text) { console.error(text); },
+      canvas: document.getElementById('canvas'),
+      setStatus: function(text) {
+        statusText.textContent = text;
+        if (!text) {
+          spinner.style.display = 'none';
+          document.getElementById('status').style.display = 'none';
+        }
+      },
+      monitorRunDependencies: function(left) {
+        if (left === 0) {
+          Module.setStatus('');
+        } else {
+          Module.setStatus('Loading... (' + left + ' files remaining)');
+        }
+      }
+    };
+
+    Module.setStatus('Downloading...');
+    window.onerror = function() {
+      Module.setStatus('Exception thrown, see JavaScript console');
+      spinner.style.display = 'none';
+    };
+  </script>
+  {{{ SCRIPT }}}
+</body>
+</html>

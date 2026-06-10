@@ -7,7 +7,7 @@
 
 (def road-left 200)
 (def road-width 400)
-(def lane-count 4)
+(def lane-count 5)
 (def lane-width (/ road-width lane-count))
 
 # --- State ---
@@ -27,7 +27,8 @@
   (each car (st :cars)
     (update car :y |(- $ (car :speed)))
     (when (< (car :y) -60)
-      (put car :y (+ screen-height 60))))
+      (put car :y (+ screen-height 60)))
+    (update car :x |(+ (* (math/sin $) 50) 100)) )
   st)
 
 # --- Draw ---

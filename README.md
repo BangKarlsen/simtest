@@ -90,6 +90,31 @@ Note: if you redefine a function that's called by another function (e.g. redefin
 
 `src/dev.janet` loads the game module and shares its environment with a `spork/netrepl` server. The game loop yields to Janet's event loop each frame (`ev/sleep 0`), giving the REPL server a chance to process your input between frames. The simulation and REPL run cooperatively in the same process.
 
+## Troubleshooting
+
+### `jpm install` fails with "Permission denied"
+
+`jpm` is bundled with Janet and installed automatically by `brew install janet` — you do **not** need to install it separately. However, Homebrew creates `/usr/local/lib/janet/` owned by root, so `jpm` cannot write packages there without elevated privileges.
+
+Fix it once by taking ownership of the directory:
+
+```bash
+sudo chown -R $(whoami) /usr/local/lib/janet/
+```
+
+After that, `jpm install` and `make setup` work without `sudo`. Do **not** clone or copy `jpm` manually into your project — that's what causes the submodule issue below.
+
+### `git submodule update` fails with "no url found for submodule path 'jpm'"
+
+`jpm` is part of Janet's system installation at `/usr/local/lib/janet/jpm/`. If it was accidentally picked up as a git submodule (gitlink in the index), remove it:
+
+```bash
+git rm --cached jpm
+git commit -m "Remove accidental jpm submodule from index"
+```
+
+`jpm` should never be committed as part of this project.
+
 ## Standalone REPL (no window)
 
 You can also use the basic Janet REPL to test logic without any graphics:
